@@ -54,13 +54,16 @@ console.log(r.two); //2
 function return_object(func, ...args){
 	return () => {
 		let arr = func();   
-			if (Array.isArray(arr)) {
+
+		if (Array.isArray(arr)) {
 				let obj = {};
-				for(let i=0;i<=arr.length;i++) {
-					obj[args[i]] = arr[i];
+				for(let i = 0; i <= arr.length; i++) {
+					obj[ args[i] ] = arr[i];
 				}
+				
 			return obj;
 		}
-	return arr;
+
+		return arr;
 	}
 }
