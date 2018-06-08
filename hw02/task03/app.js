@@ -16,26 +16,32 @@ const util = require('util');
 
 let readFile = util.promisify(fs.readFile);
 
+let files = {
+  input:     'data/data.txt',
+  outputMod: 'data/out-1.txt',
+  outputPow: 'data/out-2.txt'
+};
+
 async function getData() {
-  return await readFile('data/data.txt');
+  return await readFile(files.input);
 }
 
 getData().then(data => {
-  let data1='', data2='';
+  let dataMod='', dataPow='';
 
-  data.toString().split(' ').forEach((elem) => {
+  data.toString().split(' ').forEach(elem => {
     if(parseInt(elem)%2 === 0) {
-      data1+=`${elem} `;
+      dataMod+=`${elem} `;
     }
-    data2+=`${Math.pow(parseInt(elem), 3)} `;
+    dataPow+=`${Math.pow(parseInt(elem), 3)} `;
   });
 
-  fs.writeFile('data/out-1.txt', data1, (err) => {
+  fs.writeFile(files.outputMod, dataMod, err => {
     if (err) return console.log(err);
   }
   );
 
-  fs.writeFile('data/out-2.txt', data2, (err) => {
+  fs.writeFile(files.outputPow, dataPow, err => {
     if (err) return console.log(err);
   }
   );
