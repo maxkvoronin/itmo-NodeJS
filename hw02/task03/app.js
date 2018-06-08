@@ -21,7 +21,7 @@ async function getData() {
 }
 
 getData().then(data => {
-  var data1='', data2='';
+  let data1='', data2='';
 
   data.toString().split(' ').forEach((elem) => {
     if(parseInt(elem)%2 === 0) {
