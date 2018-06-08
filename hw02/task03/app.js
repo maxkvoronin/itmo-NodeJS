@@ -14,26 +14,26 @@ https://js-node.ru/site/article?id=23#fs_fs_writefile_file_data_options_callback
 const fs = require('fs');
 const util = require('util');
 
-let readFile = util.promisify(fs.readFile);
-
 let files = {
   input:     'data/data.txt',
   outputMod: 'data/out-1.txt',
   outputPow: 'data/out-2.txt'
 };
 
+let readFile = util.promisify(fs.readFile);
+
 async function getData() {
   return await readFile(files.input);
 }
 
 getData().then(data => {
-  let dataMod='', dataPow='';
+  let dataMod = '', dataPow = '';
 
   data.toString().split(' ').forEach(elem => {
-    if(parseInt(elem)%2 === 0) {
-      dataMod+=`${elem} `;
+    if(parseInt(elem) %2 === 0) {
+      dataMod += `${elem} `;
     }
-    dataPow+=`${Math.pow(parseInt(elem), 3)} `;
+    dataPow += `${Math.pow(parseInt(elem), 3)} `;
   });
 
   fs.writeFile(files.outputMod, dataMod, err => {
@@ -45,5 +45,4 @@ getData().then(data => {
     if (err) return console.log(err);
   }
   );
-
 })
