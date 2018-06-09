@@ -38,11 +38,9 @@ getData().then(data => {
 
   fs.writeFile(files.outputMod, dataMod, err => {
     if (err) return console.log(err);
-  }
-  );
+  });
 
   fs.writeFile(files.outputPow, dataPow, err => {
     if (err) return console.log(err);
-  }
-  );
-})
+  });
+});

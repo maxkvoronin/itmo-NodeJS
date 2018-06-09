@@ -7,7 +7,8 @@ const mimeTypes = {
     '.html': 'text/html',
     '.css' : 'text/css' ,
     '.jpg' : 'image/jpeg',
-    '.gif' : 'image/gif'
+    '.gif' : 'image/gif',
+    '.ico' : 'image/x-icon',
   };
   
 http.createServer((request, response) => {
@@ -25,10 +26,12 @@ http.createServer((request, response) => {
   getData().then(data => {
     response.writeHead(200, {'Content-Type' : mimeTypes[extName] });
 
-    if(extName === '.gif' || extName === '.jpg')  
+    if(extName === '.gif' || extName === '.jpg' || extName === '.ico')  
       response.end(data, 'binary');
     else
       response.end(data);
   })
 
-}).listen(8080);
+}).listen(8080, err => {
+  if (!err) console.log('Status: OK')
+  else console.err(err)});
