@@ -2,7 +2,7 @@ setInterval(() => {
     let xhr = new XMLHttpRequest();
 
     xhr.onreadystatechange = () => {
-        if (xhr.readyState == 4 && xhr.status == 200) {
+        if (xhr.readyState === 4 && xhr.status === 200) {
             
             try {
                 var data = JSON.parse(xhr.responseText);
