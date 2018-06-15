@@ -21,13 +21,20 @@
     let file = document.getElementById("file");
 
     file.onchange = () => {
-        xhr = new XMLHttpRequest(),
-        form = new FormData();
+        let xhr = new XMLHttpRequest();
+        let form = new FormData();
         let upload_file = file.files[0];
         form.append("file", upload_file);
         xhr.open("POST", 'http://localhost:8080/', true);
         xhr.send(form); 
-        msg.innerText = `Файл ${file.files[0].name} загружен на сервак`;
+
+        xhr.onreadystatechange = () => {
+          if (xhr.readyState === 4 && xhr.status === 200) {
+            msg.innerText = `Файл ${file.files[0].name} загружен на сервак`;
+          }
+          else
+            msg.innerText = 'Что-то пошло не так';
+        }
     }
   </script>
 
