@@ -1,7 +1,9 @@
 module.exports = (data, callback) => {
-  let json = {};
+  let json = new Object();
+  let filename = new String();
+
   let arr  = data.toString().split('\n');
-  let filename = '';
+
   arr.forEach((row, i) => {
     row = row.replace(/\r/,'');
     
@@ -17,7 +19,7 @@ module.exports = (data, callback) => {
     } 
 
     else if (row.includes('HTTP/')) {
-      let header = row.split(' ');
+      let header = row.split(' ');cd ..
         json['protocol'] = header[0];
         json['status_code'] = header[1];
         json['status_message'] = header.splice(2).join(' ');
