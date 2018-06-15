@@ -2,7 +2,7 @@ const http = require('http');
 const fs = require('fs'); 
 const fileName = "index.html";
 
-let parser = require('./parser');
+let parser = require('./parser.js');
 let i = 0;
 
 let server = http.createServer((req, res) => {
