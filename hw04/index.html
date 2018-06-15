@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <title>UPLOAD FILE</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+<style>
+  html {
+    background: #222;
+    color: #fff;
+  }
+</style>
+</head>
+<body>
+  
+  <input type="file" id="file">
+  <div id="msg"></div>
+
+  <script>
+    let file = document.getElementById("file");
+
+    file.onchange = () => {
+        xhr = new XMLHttpRequest(),
+        form = new FormData();
+        let upload_file = file.files[0];
+        form.append("file", upload_file);
+        xhr.open("POST", 'http://localhost:8080/', true);
+        xhr.send(form); 
+        msg.innerText = `Файл ${file.files[0].name} загружен на сервак`;
+    }
+  </script>
+
+</body>
+</html>
