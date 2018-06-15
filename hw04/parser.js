@@ -19,7 +19,7 @@ module.exports = (data, callback) => {
     } 
 
     else if (row.includes('HTTP/')) {
-      let header = row.split(' ');cd ..
+      let header = row.split(' ');
         json['protocol'] = header[0];
         json['status_code'] = header[1];
         json['status_message'] = header.splice(2).join(' ');
