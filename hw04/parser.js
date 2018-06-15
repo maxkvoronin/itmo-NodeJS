@@ -1,6 +1,6 @@
-module.exports = (arr, callback) => {
+module.exports = (data, callback) => {
   let json = {};
-
+  let arr  = data.toString().split('\n');
   arr.forEach((row, i) => {
     row = row.replace(/\r/,'');
     

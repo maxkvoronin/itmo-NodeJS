@@ -6,6 +6,7 @@ let parser = require('./parser.js');
 let i = 0;
 
 let server = http.createServer((req, res) => {
+ 
   fs.readFile(fileName, 'utf8', (err, data) => {
       if (err)
           console.log('Не могу открыть файл' );
@@ -14,17 +15,14 @@ let server = http.createServer((req, res) => {
           res.end(data);
       }
   })
-}).listen(8080);
 
-
-server.on('request', (req, res) => {
   req.on('data', (data) => {
-    parser(data.toString().split('\n'), json => {
+    parser(data, json => {
       fs.writeFile(`result${++i}.json`, json, err => {
         if (err) return console.log(err);
         else console.log(`Сервак распарсил входящий файл и записал его в result${i}.json`);
       });
     });
   });
-});
 
+}).listen(8080);
