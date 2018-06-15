@@ -1,9 +1,14 @@
 module.exports = (data, callback) => {
   let json = {};
   let arr  = data.toString().split('\n');
+  let filename = '';
   arr.forEach((row, i) => {
     row = row.replace(/\r/,'');
     
+    if (row.includes('Content-Disposition:')) {
+      filename = `${row.split('="').pop().slice(0,-5)}.json`;
+    }
+
     if (row.includes('GET')) {
       let header = row.split(' ');
         json['method'] = header[0];
@@ -24,5 +29,5 @@ module.exports = (data, callback) => {
     }
 
   });
-  return callback(JSON.stringify(json, null, '  '));
+  return callback(filename, JSON.stringify(json, null, '  '));
 }

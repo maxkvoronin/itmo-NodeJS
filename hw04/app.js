@@ -3,11 +3,9 @@ const fs = require('fs');
 const fileName = "index.html";
 
 let parser = require('./parser.js');
-let queryNum = 0;
 
 let server = http.createServer((req, res) => {
  
-
   fs.readFile(fileName, 'utf8', (err, data) => {
       if (err) return console.log(err);
       else {
@@ -17,10 +15,10 @@ let server = http.createServer((req, res) => {
   })
 
   req.on('data', (data) => {
-    parser(data, (json) => {
-      fs.writeFile(`result${++queryNum}.json`, json, err => {
+    parser(data, (fName, json) => {
+      fs.writeFile(fName, json, err => {
         if (err) return console.log(err);
-        else console.log(`Сервак распарсил входящий файл и записал его в result${queryNum}.json`);
+        else console.log(`Сервак распарсил входящий файл и записал его в ${fName}`);
       });
     });
   });
