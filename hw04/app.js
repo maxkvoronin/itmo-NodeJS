@@ -6,7 +6,7 @@ let parser = require('./parser');
 let i = 0;
 
 let server = http.createServer((req, res) => {
-  fs.readFile(fileName, 'utf8', function(err, data) {
+  fs.readFile(fileName, 'utf8', (err, data) => {
       if (err)
           console.log('Не могу открыть файл' );
       else {
@@ -18,7 +18,7 @@ let server = http.createServer((req, res) => {
 
 
 server.on('request', (req, res) => {
-  req.on('data', function(data) {
+  req.on('data', (data) => {
     parser(data.toString().split('\n'), json => {
       fs.writeFile(`result${++i}.json`, json, err => {
         if (err) return console.log(err);
