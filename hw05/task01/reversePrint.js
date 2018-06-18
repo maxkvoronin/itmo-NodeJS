@@ -42,26 +42,15 @@ var someList = {
     }
 };
 
-function reversePrint_v1 (obj) {
+function reversePrint (obj) {
     var arr = [];
     while(true) {
-        arr.unshift(obj.value);
+        arr.push(obj.value);
         if (obj.next === null)
             break;
         obj = obj.next;
     }
-    console.log(arr);
+    console.log(arr.reverse().join(', '));
 }
 
-function reversePrint_v2 (obj, arr) {
-    if (arr === undefined)
-        arr = [];
-    arr.unshift(obj.value);
-    if (obj.next !== null)
-        return reversePrint_v2(obj.next, arr);
-    else
-        console.log(arr);
-}
-
-reversePrint_v1(someList);
-reversePrint_v2(someList);
+reversePrint(someList);

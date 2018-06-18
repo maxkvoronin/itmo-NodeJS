@@ -1,0 +1,19 @@
+{
+  "name": "lab05",
+  "version": "1.0.0",
+  "description": "my lab",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "express"
+  ],
+  "author": "me",
+  "license": "ISC",
+  "dependencies": {
+    "body-parser": "^1.18.3",
+    "express": "^4.16.3",
+    "mustache-express": "^1.2.6"
+  }
+}
