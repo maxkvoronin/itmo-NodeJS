@@ -1,12 +1,13 @@
 const http = require('http');
 const fs = require('fs');
-let generateKey = require('./generateKеy');
+let generateKey = require('./generateKey');
 
 let AuthKeys = new Array();
 
 let server = http.createServer((req, res) => {
 
-  if (req.method === 'POST') {
+  if (req.method === 'POST' && req.url === '/scripts/test_task/api_sample') {
+
     res.writeHead(200, {'Content-Type' : 'application/json',
                         'Access-Control-Allow-Origin': '*'
     });
