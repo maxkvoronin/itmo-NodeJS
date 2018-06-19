@@ -31,8 +31,8 @@ function convert (str) {
 
   str = str.replace(/\(/g, '( ')
            .replace(/\)/g, ' )')
-           .replace(/-\d/g, '- ');
-
+           .replace(/-/g, '- ');
+ 
   str.split(' ').forEach(token => {
     if (!isNaN(token)) {
       res.push(token);
@@ -70,7 +70,7 @@ function convert (str) {
       stack.pop();
   }
 
-  return res.join(' ');
+  return res.join(' ').replace('  ', ' ');
 }
 
 module.exports.calc = calc;
