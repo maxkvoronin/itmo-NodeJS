@@ -1,18 +1,13 @@
-const http = require('http');
-const fs = require('fs');
 let generateKey = require('./generateKey');
-
 let AuthKeys = new Array();
 
-let server = http.createServer((req, res) => {
-
+require('http').createServer((req, res) => {
   if (req.method === 'POST' && req.url === '/scripts/test_task/api_sample') {
+    let data = new String();
 
     res.writeHead(200, {'Content-Type' : 'application/json',
                         'Access-Control-Allow-Origin': '*'
     });
-
-    var data = new String();
 
     req.on('data', (chunk) => {
       data += chunk.toString();
@@ -24,42 +19,31 @@ let server = http.createServer((req, res) => {
 
       if (params.method === 'get_api_key') {
         answer = generateKey();      
-        answer['ip'] = req.connection.remoteAddress;
-
+        answer.ip = req.connection.remoteAddress;
         AuthKeys.push(answer.key);
-
         res.end(JSON.stringify(answer));
       } else 
       
       if (params.method === 'send_lead') {
-          if (AuthKeys.includes(params.key)) {
-
-          answer = {
-            status: 'success',
-            message : 'lead was successfully sent',
-            key : params.key
-          }
-        
+        if (AuthKeys.includes(params.key)) {
+          answer = {status:'success',message:'lead was successfully sent',key:params.key};        
           delete params.key;
           delete params.method;
-          answer.data = params
-
+          answer.data = params;
         } else {
           answer.status = 'error';
           answer.message = 'unknown key';
         }
-        
       } else {
         answer.status = 'error';
         answer.message = 'unknown method';
       }
 
-      res.end(JSON.stringify(answer));
+    res.end(JSON.stringify(answer));
     });
   }
-
   else {
-    fs.readFile('./public/sample.html', 'utf8', (err, data) => {
+    require('fs').readFile('./public/sample.html', 'utf8', (err, data) => {
       res.writeHead(200, {'Content-Type': 'text/html'});
       res.end(data);
     })
