@@ -25,7 +25,7 @@ require('http').createServer((req, res) => {
       } else 
       
       if (params.method === 'send_lead') {
-        if (AuthKeys.includes(params.key)) {
+        if (authKeys.includes(params.key)) {
           answer = {status:'success',message:'lead was successfully sent',key:params.key};        
           delete params.key;
           delete params.method;
