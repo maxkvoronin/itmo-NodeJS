@@ -1,24 +1,16 @@
 const http = require('http');
-let generateKey = require('./functions.js').generateKey;
-let checkParams = require('./functions.js').checkParams;
+const fs = require('fs');
+let generateKey = require('./generateKеy');
 
-let server = http.createServer().listen(8080);
-let keys = new Array();
+let AuthKeys = new Array();
 
-server.on('request', (req, res) => {
+let server = http.createServer((req, res) => {
 
-  res.writeHead(200, {'Content-Type' : 'application/json',
-                      'Access-Control-Allow-Origin': '*'
-  });
+  if (req.method === 'POST') {
+    res.writeHead(200, {'Content-Type' : 'application/json',
+                        'Access-Control-Allow-Origin': '*'
+    });
 
-  if (req.headers['content-type'] === undefined) {
-    let keyObj = generateKey();
-    keys.push(keyObj['key']);
-
-    res.end(JSON.stringify(keyObj));
-  }
-
-  if (req.headers['content-type'] === 'application/x-www-form-urlencoded') {
     var data = new String();
 
     req.on('data', (chunk) => {
@@ -26,44 +18,50 @@ server.on('request', (req, res) => {
     });
     
     req.on('end', () => {
-      var params = new Object();
-      params = JSON.parse(data);
+      let params = JSON.parse(data);
+      let answer = new Object();
 
-      var result = new Object();
+      if (params.method === 'get_api_key') {
+        answer = generateKey();      
+        answer['ip'] = req.connection.remoteAddress;
+
+        AuthKeys.push(answer.key);
+
+        res.end(JSON.stringify(answer));
+      } else 
       
-      if (checkParams(params)) {
-        if (params['method'] === 'send_lead') {
-          result['status'] = 'success';
-          result['message'] = 'lead was successfully sent';
-          result['key'] = params['key'];
+      if (params.method === 'send_lead') {
+          if (AuthKeys.includes(params.key)) {
 
-          delete params['method'];
-          delete params['key'];
-          
-          result['data'] = params;
-        } else
-
-        if (params['method'] === 'get_api_key') {
-          result['status'] = 'success';
-          result['key'] = params['key'];
+          answer = {
+            status: 'success',
+            message : 'lead was successfully sent',
+            key : params.key
+          }
+        
+          delete params.key;
+          delete params.method;
+          answer.data = params
 
         } else {
-          result['status'] = 'error';
-          result['message'] = 'unknown method';
+          answer.status = 'error';
+          answer.message = 'unknown key';
         }
-
-        if (!keys.includes(result['key'])) {
-          result['status'] = 'error';
-          result['message'] = 'invalid key';
-        }
-      }
-      else {
-        result['status'] = 'error';
-        result['message'] = 'missing parameter';
+        
+      } else {
+        answer.status = 'error';
+        answer.message = 'unknown method';
       }
 
-      res.end(JSON.stringify(result));
+      res.end(JSON.stringify(answer));
     });
   }
 
-});
+  else {
+    fs.readFile('./public/sample.html', 'utf8', (err, data) => {
+      res.writeHead(200, {'Content-Type': 'text/html'});
+      res.end(data);
+    })
+  }
+}).listen(8080);
+

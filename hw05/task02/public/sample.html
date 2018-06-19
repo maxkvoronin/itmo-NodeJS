@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <title>post generator</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+    <style>
+    html {
+        background: #222;
+        color: #fff;
+    }
+    .container {
+        width: 100%;
+        height: 100%;
+        position: fixed;
+        display: flex;
+        align-items: center;
+        align-content: center; 
+        justify-content: center; 
+    }
+</style>
+</head>
+<body>
+        <div class="container">  
+            <div>    
+                <h2>Simple API</h2>
+                <p><input id="userName" type="text" placeholder="your name"></p>
+                <p><input id="userPhone" type="text" placeholder="your phone"></p>
+                <p><input type="submit" onclick="sendData()"/></p>
+            </div>
+        </div>
+  <script>
+
+    let requestKey;
+
+    window.onload = () => {
+        let xhr = new XMLHttpRequest();
+        xhr.open("POST", 'http://localhost:8080/scripts/test_task/api_sample', true);
+        xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
+
+        xhr.onreadystatechange = () => {
+            if (xhr.readyState === 4 && xhr.status === 200) {
+                requestKey = JSON.parse(xhr.responseText);
+            }
+        };
+        xhr.send(JSON.stringify({method: 'get_api_key'}));  
+    }
+
+    function sendData() {
+        if (userName.value.length === 0 || userPhone.value.length  === 0)
+            alert('Please fill the forms');
+        else {
+            let xhr = new XMLHttpRequest();
+            xhr.open("POST", 'http://localhost:8080/scripts/test_task/api_sample', true);
+            xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
+
+            xhr.onreadystatechange = () => {
+                if (xhr.readyState === 4 && xhr.status === 200) {
+                    var json = JSON.parse(xhr.responseText);
+                    console.log(json);          
+                }
+            };
+
+            xhr.send(JSON.stringify( {
+                method: 'send_lead',
+                name: userName.value,
+                phone: userPhone.value,
+                ip: requestKey.ip,
+                key: requestKey.key
+            }));
+        }
+    }
+</script>
+
+</body>
+</html>
