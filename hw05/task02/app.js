@@ -1,5 +1,5 @@
 let generateKey = require('./generateKey');
-let AuthKeys = new Array();
+let authKeys = new Array();
 
 require('http').createServer((req, res) => {
   if (req.method === 'POST' && req.url === '/scripts/test_task/api_sample') {
@@ -20,7 +20,7 @@ require('http').createServer((req, res) => {
       if (params.method === 'get_api_key') {
         answer = generateKey();      
         answer.ip = req.connection.remoteAddress;
-        AuthKeys.push(answer.key);
+        authKeys.push(answer.key);
         res.end(JSON.stringify(answer));
       } else 
       
