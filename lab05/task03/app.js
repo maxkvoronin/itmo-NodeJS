@@ -13,7 +13,7 @@ app.set('views', __dirname + '/views');
 app.engine('mustache', mustacheExpress());
 app.set('view engine', 'mustache');
 
-app.post('/reg',  function(req, res) {
+app.route('/reg').post((req, res) => {
   console.log('POST: ' + JSON.stringify(req.body));
   res.render('reg_done', { title: 'Registration complete!' });
 });
