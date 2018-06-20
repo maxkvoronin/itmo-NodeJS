@@ -10,7 +10,8 @@ function calc (expr) {
   };
 
   let stack = [];
-  
+  stack.push(0);
+
   expr.split(' ').forEach((token) => {
       if (token in operators) {
           let [y, x] = [stack.pop(), stack.pop()];
