@@ -40,7 +40,7 @@ router.post('/auth', (req, res, next) => {
 router.post('/logout', (req, res, next) => {
   req.session = null;
   res.cookie('name', guestHash, {expires: new Date(0)});
-  res.render('admin_auth', { message: 'Вы разлоинились'});
+  res.render('admin_auth', { message: 'Вы разлогинились'});
 });
 
 router.get('/', (req, res, next) => {
