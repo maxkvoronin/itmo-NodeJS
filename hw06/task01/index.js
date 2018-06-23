@@ -170,11 +170,11 @@ class LinkedList {
       this.lst = new Node(this.map.get(j), this.lst); 
     }
 
-    return this.lst;
+    return i;
   }
 
   is_empty() {
-    if (this.len() === null)
+    if (this.len() === 0)
       return true;
     else
       return false;
