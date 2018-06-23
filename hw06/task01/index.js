@@ -174,7 +174,7 @@ class LinkedList {
   }
 
   is_empty() {
-    if (this.len() === 0)
+    if (this.len() === null)
       return true;
     else
       return false;
@@ -209,12 +209,14 @@ console.log(list.remove(88));
 console.log(list.removeAt(4));
 console.log(list.contains(10));
 console.log(list.len());
-console.log(list.is_empty());
+//console.log(list.is_empty());
 console.log(list.insert(5,100));
 console.log(list.remove(1));
 console.log(list.remove(2));
 console.log(list.clear());
 console.log(list.insert(2,88));
+console.log(list.clear());
+console.log(list.add(11));
 console.log(list.clear());
 console.log(list.is_empty());
 
