@@ -20,7 +20,9 @@ router.get('/admin', (req, res, next) => {
 router.post('/auth', (req, res, next) => {
   model.getPassFromDB(req.body.login)
     .then(([password, id]) => {
-      if (password === req.body.pass) {
+      if (password === undefined)
+        res.render('admin_auth', { message: 'Неверный пользователь'});
+      else if (password === req.body.pass) {
         hash = crypto.createHash('md5').update(req.body.login).update(password).digest('hex');
         res.cookie('name', hash, {httpOnly: true});
         res.cookie('userid', id, {httpOnly: true});
@@ -31,10 +33,7 @@ router.post('/auth', (req, res, next) => {
       }
     })
     .catch((error) => {
-      if (error !== undefined)
-        return next(error);
-      else 
-        res.render('admin_auth', { message: 'Неверный пользователь'});
+        return next(error);        
     }); 
 });
 

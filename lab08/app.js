@@ -1,6 +1,14 @@
 /*
- * логин admin
- * пароль 12345
+Вот моя база, дамп не получается сделать 
+
+	mysql> SELECT * FROM user;
+	+----+--------+---------+
+	| id | login  | pass    |
+	+----+--------+---------+
+	|  1 | admin  | 12345   |
+	|  2 | max1   | qwerty1 |
+	|  3 | natali | q1w2e3  |
+	+----+--------+---------+	
 */
 
 const express = require('express'); 
