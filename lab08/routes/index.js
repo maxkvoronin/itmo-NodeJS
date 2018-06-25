@@ -37,23 +37,22 @@ router.post('/auth', (req, res, next) => {
     }); 
 });
 
+router.post('/edit', async (req, res, next) => {
+  try {
+    await model.changeProfile(req.body.nwLogin, req.body.nwPass, req.cookies.userid);
+    res.render('welcome', { message:' Ваш пароль изменен.'});
+  } 
+  catch (err) {
+    next(err);
+  }
+});
+
 router.post('/logout', (req, res, next) => {
   req.session = null;
   res.cookie('name', hash, {expires: new Date(0)});
   res.cookie('userid', 0, {expires: new Date(0)});
 
   res.render('admin_auth', { message: 'Вы разлогинились'});
-});
-
-router.post('/edit', (req, res, next) => {
-  model.changeProfile(req.body.nwLogin, req.body.nwPass, req.cookies.userid, (err) => {
-    if (err) { 
-      console.log(err);
-      return next(err);
-    }
-    else
-      res.render('welcome', { message:' Ваш пароль изменен.'});
-  });
 });
 
 router.get('/', (req, res, next) => {

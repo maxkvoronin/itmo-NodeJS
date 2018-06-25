@@ -22,13 +22,15 @@ module.exports = {
       });    
     });
   },	
-  //через кб
-  changeProfile: function(login, pass, id, cb) {   
-    connection.query('UPDATE user SET login=?, pass=? WHERE id=?',[login, pass, id], (error, results, fields) => {
-      if (error) 
-        return cb(error);
-      else 
-        cb();
-    });    
+  //через промис, но обрабатываем его не через then, а через async/await
+  changeProfile: (login, pass, id) => {
+    return new Promise ((resolve, reject) => {    
+      connection.query('UPDATE user SET login=?, pass=? WHERE id=?',[login, pass, id], (error, results, fields) => {
+        if (error) 
+          reject(error);
+        else 
+          resolve(login, pass, id);
+      });    
+    });
   }
 };
