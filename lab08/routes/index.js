@@ -7,23 +7,31 @@ const router = express.Router();
 const crypto = require('crypto');
 const model = require('../model/model.js');
 
-let hash;
-
 router.get('/admin', (req, res, next) => {
-  if(req.cookies.name === hash && hash !== undefined){
-    res.render('welcome');
-  } else {
+  if (req.cookies.name === undefined)
     res.render('admin_auth', { message: 'Введите пароль:'});
-  }
+  else
+    model.checkHash(req.cookies.name)
+      .then((isAuth) => {
+        if (isAuth = true)
+          res.render('welcome');
+        else
+          res.render('admin_auth', { message: 'Введите пароль:'});
+      })
+      .catch((error) => {
+        return next(error);        
+      }); 
 });
 
 router.post('/auth', (req, res, next) => {
-  model.getPassFromDB(req.body.login)
-    .then(([password, id]) => {
-      if (password === undefined)
+  model.getHashFromDB(req.body.login)
+    .then(([hashDB, id]) => {
+      let hash = crypto.createHash('md5').update(req.body.login).update(req.body.pass).digest('hex');
+
+      if (hashDB === undefined)
         res.render('admin_auth', { message: 'Неверный пользователь'});
-      else if (password === req.body.pass) {
-        hash = crypto.createHash('md5').update(req.body.login).update(password).digest('hex');
+
+      else if (hash === hashDB) {  
         res.cookie('name', hash, {httpOnly: true});
         res.cookie('userid', id, {httpOnly: true});
         res.render('welcome');
@@ -49,7 +57,7 @@ router.post('/edit', async (req, res, next) => {
 
 router.post('/logout', (req, res, next) => {
   req.session = null;
-  res.cookie('name', hash, {expires: new Date(0)});
+  res.cookie('name', 0, {expires: new Date(0)});
   res.cookie('userid', 0, {expires: new Date(0)});
 
   res.render('admin_auth', { message: 'Вы разлогинились'});
