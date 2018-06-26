@@ -65,6 +65,9 @@ class LinkedList {
   }
 
   get (index) {
+    if (this.map.get(index) === undefined)
+      throw new Error('invalid index');
+
     return this.map.get(index);
   }
 
@@ -101,6 +104,8 @@ class LinkedList {
     this.map = new Map();
 
     let i = 0;
+    let value;
+
     while (this.lst!==null) {
       this.map.set(i, this.lst._value);
       this.lst = this.lst._next;
@@ -116,6 +121,7 @@ class LinkedList {
         }
         break;
       }
+      value = this.map.get(i);
       nwmap.set(i, this.map.get(i));
     }
 
@@ -123,7 +129,10 @@ class LinkedList {
       this.lst = new Node(nwmap.get(j), this.lst); 
     }
 
-    return this.lst;
+    if (this.map.get(index) === undefined)
+      throw new Error('invalid index');
+
+    return value;
   }
 
   contains (value) {
@@ -204,6 +213,7 @@ class LinkedList {
 var list = new LinkedList(1, 2, 3);
 console.log(list.add(10));
 console.log(list.add(11));
+console.log(list.get(4));
 console.log(list.insert(5,88));
 console.log(list.remove(88));
 console.log(list.removeAt(4));
