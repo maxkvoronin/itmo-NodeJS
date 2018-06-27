@@ -1,11 +1,10 @@
-var express = require('express');
-var app = express();
-var server = require('http').Server(app);
-var io = require('socket.io')(server);
-var isWin = require('./model/tictac.js');
+const express = require('express');
+const app = express();
+const server = require('http').Server(app);
+const io = require('socket.io')(server);
+const isWin = require('./model/tictac.js');
 
 server.listen(3000);
-
 app.use(express.static('public'));
 
 app.get('/', function (req, res) {
