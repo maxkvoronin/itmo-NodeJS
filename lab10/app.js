@@ -2,6 +2,7 @@ var express = require('express');
 var app = express();
 var server = require('http').Server(app);
 var io = require('socket.io')(server);
+var isWin = require('./model/tictac.js');
 
 server.listen(3000);
 
@@ -11,37 +12,7 @@ app.get('/', function (req, res) {
   res.sendFile(__dirname + '/index.html');
 });
 
-var table = {
-  status: '',
-  current: '',
-  row1: ['','',''],
-  row2: ['','',''],
-  row3: ['','',''],
-};
 
-var players = [];
-
-let isWin = function (tab) {
-  if ((tab.row1[0] === 'X' && tab.row1[1] === 'X' && tab.row1[2] === 'X') ||
-      (tab.row2[0] === 'X' && tab.row2[1] === 'X' && tab.row2[2] === 'X') ||
-      (tab.row3[0] === 'X' && tab.row3[1] === 'X' && tab.row3[2] === 'X') ||
-      (tab.row1[0] === 'X' && tab.row2[0] === 'X' && tab.row3[0] === 'X') ||
-      (tab.row1[1] === 'X' && tab.row2[1] === 'X' && tab.row3[1] === 'X') ||
-      (tab.row1[2] === 'X' && tab.row2[2] === 'X' && tab.row3[2] === 'X') ||
-      (tab.row1[0] === 'X' && tab.row2[1] === 'X' && tab.row3[2] === 'X') ||
-      (tab.row3[0] === 'X' && tab.row2[1] === 'X' && tab.row1[2] === 'X') ||
-
-      (tab.row1[0] === 'O' && tab.row1[1] === 'O' && tab.row1[2] === 'O') ||
-      (tab.row2[0] === 'O' && tab.row2[1] === 'O' && tab.row2[2] === 'O') ||
-      (tab.row3[0] === 'O' && tab.row3[1] === 'O' && tab.row3[2] === 'O') ||
-      (tab.row1[0] === 'O' && tab.row2[0] === 'O' && tab.row3[0] === 'O') ||
-      (tab.row1[1] === 'O' && tab.row2[1] === 'O' && tab.row3[1] === 'O') ||
-      (tab.row1[2] === 'O' && tab.row2[2] === 'O' && tab.row3[2] === 'O') ||
-      (tab.row1[0] === 'O' && tab.row2[1] === 'O' && tab.row3[2] === 'O') ||
-      (tab.row3[0] === 'O' && tab.row2[1] === 'O' && tab.row1[2] === 'O')) {
-    return true;
-      }
-}
 
 io.on('connection', function (socket) {
   let connectedPlayers = Object.keys(io.sockets.connected).length;
@@ -59,12 +30,14 @@ io.on('connection', function (socket) {
 
     players[0].on('disconnect', () => {
       table.status = 'disconnect 1';
+      console.log("player 1 disconnected");
       players[1].emit('status', table);
       players[0] = players[1];
     });
 
     players[1].on('disconnect', () => {
       table.status = 'disconnect 2';
+      console.log("player 2 disconnected");
       players[0].emit('status', table);
     });
 
@@ -108,7 +81,6 @@ io.on('connection', function (socket) {
     });
 
   }
-
   else {
     table.status = 'none';
     socket.emit('status', table);
