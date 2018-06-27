@@ -1,0 +1,181 @@
+<html>
+	<head>
+		<meta charset="utf8"/>
+		<title>Пример WebSocket</title>
+		<style>
+			* {
+				box-sizing : border-box;
+			}
+
+			html, body {
+				height : 100%;
+			}
+
+			.container {
+				display         : flex;
+				align-items     : center;
+				justify-content : center;
+				vertical-align  : center;
+				flex-wrap       : wrap;
+				align-content   : center;
+				font-family     : 'Open Sans', sans-serif;
+				background      : linear-gradient(top, #222, #333);
+			}
+
+			.ticTacToe {
+				display         : flex;
+				justify-content : space-between;
+				width   : 200px;
+				height  : 200px;
+				padding : 5px;
+			}
+			
+			.msg {
+				position: absolute;
+				top   : 0px;
+				height  : 50px;
+				padding : 5px;
+				font-size: 3em;
+			}
+			.column {
+				display         : flex;
+				flex-direction  : column;
+				justify-content : space-between;
+			}
+				
+			.square {
+				display : block;
+				width   : 62px;
+				height  : 62px;
+				border  : 1px solid black;
+					
+				color       : black;
+				font-size   : 2.3em;
+				font-weight : 100;
+				text-align  : center;
+				padding     : 10px;
+			}
+		</style>
+	</head>
+	<body>
+			<div id="msg" class="container"></div>
+			<div class="container">
+				<div class="ticTacToe" id="pool">
+					<div class="column">
+						<span class="square" id="row1_1"></span>
+						<span class="square" id="row2_1"></span>
+						<span class="square" id="row3_1"></span>
+					</div>
+					<div class="column">
+						<span class="square" id="row1_2"></span>
+						<span class="square" id="row2_2"></span>
+						<span class="square" id="row3_2"></span>
+					</div>
+					<div class="column">
+						<span class="square" id="row1_3"></span>
+						<span class="square" id="row2_3"></span>
+						<span class="square" id="row3_3"></span>
+					</div>
+				</div>
+			</div>
+
+		<script src="/socket.io/socket.io.js"></script>
+		<script>
+
+		var socket = io.connect('http://localhost:3000');
+
+		socket.on('status', (table) => {
+			if(table.status === 'none') {
+				msg.textContent = 'Сорри, нет свободной игры';
+				pool.style.display = 'none';
+			}
+			if(table.status === 'wait 2') 
+				msg.textContent = 'Ждем коннект второго игрока';
+			
+			if(table.status === 'wait 1') 
+				msg.textContent = 'Ждем ход первого игрока';
+
+			if(table.status === 'disconnect 1') 
+				msg.textContent = 'Первый игрок вышел';
+
+			if(table.status === 'disconnect 2') 
+				msg.textContent = 'Второй игрок вышел';
+
+			if(table.status === 'win') {
+				msg.textContent = 'Ура, вы выиграли';
+				writeTableToDom(table);
+			}
+	
+			if(table.status === 'loose') {
+				msg.textContent = 'Черт, вы проиграли';
+				writeTableToDom(table);
+			} 
+		});
+
+
+		socket.on('your turn', (table) => {
+				msg.textContent = 'Твой ход';
+				writeTableToDom(table);
+				pool.onclick = function(ev) {
+					if (ev.target.textContent === 'X' || ev.target.textContent === 'O') 
+						msg.textContent = 'Кликай по пустым полям!';
+					else {
+						this.onclick = null;
+						ev.target.textContent = table.current;
+						var nwtable = putClickInTable(ev.target.id, table);
+						nwtable.current = (table.current === 'X') ? 'O' : 'X';
+						socket.emit('my turn', nwtable);
+						msg.textContent = 'Ожидаем ход другого игрока!';
+				}	
+			}
+		});
+
+		function putClickInTable(click, table) {
+			switch (click) {
+				case 'row1_1':
+					table.row1[0] = table.current;
+					break;
+				case 'row1_2':
+					table.row1[1] = table.current;
+					break;
+				case 'row1_3':	
+					table.row1[2] = table.current;
+					break;
+				
+				case 'row2_1':
+					table.row2[0] = table.current;
+					break;
+				case 'row2_2':
+					table.row2[1] = table.current;
+					break;
+				case 'row2_3':	
+					table.row2[2] = table.current;
+					break;
+				
+				case 'row3_1':
+					table.row3[0] = table.current;
+					break;
+				case 'row3_2':
+					table.row3[1] = table.current;
+					break;
+				case 'row3_3':	
+					table.row3[2] = table.current;
+					break;
+			}
+			return table;
+		}
+
+		function writeTableToDom (table) {
+			row1_1.textContent = table.row1[0];
+			row1_2.textContent = table.row1[1];
+			row1_3.textContent = table.row1[2];
+			row2_1.textContent = table.row2[0];
+			row2_2.textContent = table.row2[1];
+			row2_3.textContent = table.row2[2];
+			row3_1.textContent = table.row3[0];
+			row3_2.textContent = table.row3[1];
+			row3_3.textContent = table.row3[2];		
+		}
+		</script>
+	</body>
+</html>
