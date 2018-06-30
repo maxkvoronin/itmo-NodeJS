@@ -1,0 +1,24 @@
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>chat</title>
+    <script src="/socket.io/socket.io.js"></script>
+  </head>
+  <body>
+			<div id="chat"></div> 
+			<div>
+    		<input type="text" name="text" size="20" id="nm">
+				<button type="button" name="button" onclick="send()">Отправить</button>
+			</div>
+		<script>
+			let socket = io.connect('http://localhost:8080');
+				function send() {
+					socket.emit('message_to_server', nm.value);
+				}
+				socket.on('message_to_clients', (data) => {
+					data.msg = data.msg.replace(';)', '<img src="http://images.clipartpanda.com/winking-smiley-face-clip-art-LTKkK6jTa.jpeg"</img>');
+					chat.innerHTML += `${data.name}: ${data.msg}<br>`;
+				});
+		</script>
+  </body>
+</html>
