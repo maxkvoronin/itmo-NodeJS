@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>ToDo List</title>
+    <link rel="stylesheet" href="style.css">
+	<script src="https://cdn.jsdelivr.net/npm/vue"></script>
+	<script src="/socket.io/socket.io.js"></script>
+</head>
+<body>
+	<div id="todoVue">
+		<div id="myDiv" class="header">
+			<h2>To Do List</h2>
+			<input type="text" id="myInput" v-model="titleTask" placeholder="Title">
+			<span class="btn" v-on:click="newElement">Add</span>
+		</div>
+		<ul id="myUl">
+			<li v-for="task in tasks" 
+				v-bind:data-id="task._id" 
+				v-bind:class="{checked: task.isDeleting}"
+				v-on:click="task.isDeleting=!task.isDeleting">{{task.title}}</li>
+		</ul>
+		<div>
+			<span class="btn" v-on:click="deleteElement">Delete</span>
+		</div>
+	</div>
+
+	<script>
+		const host = 'http://localhost:8080';
+		var app = new Vue({
+			el: '#todoVue',
+			data: {
+				titleTask:'',
+				tasks: []
+			},
+			beforeMount(){
+				this.getUnits();
+
+				io.connect(host).on('done', (data) => {
+						this.tasks = data;
+				});
+ 			},
+			methods:{
+				getUnits:function() {
+					io.connect(host).emit('getAllElements');
+				},
+				newElement:function(){
+					io.connect(host).emit('newElement', {title:this.titleTask, isDeleting:false});
+					this.titleTask = '';
+				},
+				deleteElement:function(){
+					var detetedIds = [];
+					for(var i = 0; i < this.tasks.length; i++) {
+						if(this.tasks[i].isDeleting) {
+							detetedIds.push(this.tasks[i]._id);
+							this.tasks.splice(i, 1);
+							i--;
+						}
+					}
+					io.connect(host).emit('deleteElements', detetedIds);
+				}
+			}
+		});
+	</script>
+</body>
+</html>
