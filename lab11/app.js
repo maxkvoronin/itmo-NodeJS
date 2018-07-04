@@ -38,7 +38,7 @@ io.on('connection', (socket) => {
     mongoClient.connect(url, {useNewUrlParser: true }, function(err, dbs) {
       if(err) return console.log(err);
     
-      var usersDelete = [];
+      let usersDelete = [];
 
       elems.forEach((elem) => {  
         usersDelete.push(new ObjectID(elem));
